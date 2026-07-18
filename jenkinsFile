@@ -1,11 +1,68 @@
 pipeline {
-    agent any
 
-    stages{
-        stage("Hello"){
-            steps{
-                echo "Hello world"
-            }
-        }
+    agent {
+        label 'windows'
     }
+
+    parameters {
+
+        choice(
+            name: 'BROWSER',
+            choices: ['chrome', 'firefox'],
+            description: 'Browser'
+        )
+
+        booleanParam(
+            name: 'HEADLESS',
+            defaultValue: false,
+            description: 'Run Headless'
+        )
+
+    }
+
+    stages {
+
+        stage('Build & Test') {
+
+            steps {
+
+                bat "mvn clean test -Dbrowser=${params.BROWSER} -Dheadless=${params.HEADLESS}"
+
+            }
+
+        }
+
+    }
+
+    post {
+
+        always {
+
+            archiveArtifacts artifacts: 'report.html', fingerprint: true
+
+            publishHTML([
+                    allowMissing: false,
+                    alwaysLinkToLastBuild: true,
+                    keepAll: true,
+                    reportDir: '.',
+                    reportFiles: 'report.html',
+                    reportName: 'Automation Report'
+            ])
+
+        }
+
+        success {
+
+            echo 'Automation executed successfully.'
+
+        }
+
+        failure {
+
+            echo 'Automation execution failed.'
+
+        }
+
+    }
+
 }
