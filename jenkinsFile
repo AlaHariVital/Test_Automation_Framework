@@ -60,48 +60,65 @@ pipeline {
                     reportFiles: 'report.html',
                     reportName: 'Automation Report'
             ])
-
-            emailext(
-
-            subject: "Build Failed - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-
-            body: """
-                Build failed.
-
-                Job: ${env.JOB_NAME}
-
-                Build: ${env.BUILD_NUMBER}
-
-                Branch: ${env.BRANCH_NAME}
-
-                URL: ${env.BUILD_URL}
-
-            """,
-
-            to: "vital121ahhari@gmail.com"
-
-        )
-
-
         }
 
         success {
 
             echo 'Automation executed successfully.'
+            emailext(
+
+                subject: "Build Success - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+
+                body: """
+                    Build failed.
+
+                    Job: ${env.JOB_NAME}
+
+                    Build: ${env.BUILD_NUMBER}
+
+                    Branch: ${env.BRANCH_NAME}
+
+                    URL: ${env.BUILD_URL}
+
+                """,
+
+                to: "vital121ahhari@gmail.com"
+
+            )
 
         }
 
         failure {
 
             echo 'Automation execution failed.'
+            emailext(
+
+                subject: "Build Failed - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+
+                body: """
+                    Build failed.
+
+                    Job: ${env.JOB_NAME}
+
+                    Build: ${env.BUILD_NUMBER}
+
+                    Branch: ${env.BRANCH_NAME}
+
+                    URL: ${env.BUILD_URL}
+
+                """,
+
+                to: "vital121ahhari@gmail.com"
+
+            )
 
         }
 
-        UNSTABLE{
+        unstable{
             echo 'Automation execution is unstable.'
         }
 
-        ABORTED{
+        aborted{
             echo 'Automation execution aborted.'
         }
 
