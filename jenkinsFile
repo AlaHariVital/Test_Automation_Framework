@@ -45,6 +45,12 @@ pipeline {
         }
 
     }
+    // triggers {
+
+    //     pollSCM('* * * * *')
+    //     corn('H/5 * * * *'  )
+
+    // }
 
     post {
 
